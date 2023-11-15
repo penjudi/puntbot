@@ -1,29 +1,18 @@
-# .github/workflows/code-checking-workflow.yml
-name: Code Checking Workflow
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
 jobs:
   code-check:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout
+        uses: actions/checkout@v3
 
       - name: Set up Node.js 16
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '16'
 
       - name: Set up Python
-        uses: actions/setup-python
+        uses: actions/setup-python@v3
         with:
           python-version: '3.12'
 
@@ -50,10 +39,10 @@ jobs:
           git push
 
       - name: Run linter
-        run: src
+        uses: eslint/eslint@v8
 
       - name: Run code formatter
-        run: src
+        uses: actions/format@v3
 
       - name: Run code analysis
         run: python website_change_detection.py
