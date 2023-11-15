@@ -34,22 +34,27 @@ jobs:
         run: |
           echo "::set-output name=checkout::$(curl -s https://api.github.com/repos/actions/checkout/releases/latest | jq -r .tag_name)"
           echo "::set-output name=setup_python::$(curl -s https://api.github.com/repos/actions/setup-python/releases/latest | jq -r .tag_name)"
+
       - name: Compare versions and update workflow
         run: |
           checkout_version=${{ steps.versions.outputs.checkout }}
           setup_python_version=${{ steps.versions.outputs.setup_python }}
           sed -i "s/actions\/checkout@v[^']*/actions\/checkout@$checkout_version/" .github/workflows/code-checking-workflow.yml
           sed -i "s/actions\/setup-python@v[^']*/actions\/setup-python@$setup_python_version/" .github/workflows/code-checking-workflow.yml
+
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .github/workflows/code-checking-workflow.yml
           git commit -m "Update GitHub Actions versions"
           git push
+
       - name: Run linter
-        uses: eslint/eslint@v8.53.0
+        uses: eslint/eslint@v8
 
       - name: Run code formatter
-        uses: actions/format@v3
+        uses: https://github.com/actions/format@v3
+        with:
+          args: 'src/**/*.py'
 
       - name: Run code analysis
         run: python website_change_detection.py
