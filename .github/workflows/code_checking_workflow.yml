@@ -46,7 +46,7 @@ jobs:
           git commit -m "Update GitHub Actions versions"
           git push
       - name: Run linter
-        uses: eslint/eslint@v8
+        uses: eslint/eslint@v7
 
       - name: Run code formatter
         uses: actions/format@v3
