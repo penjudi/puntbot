@@ -14,9 +14,9 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout
 
       - name: Format code
-        uses: actions/format@v3
+        uses: actions/format
         with:
           args: 'src/**/*.py'
