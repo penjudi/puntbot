@@ -1,6 +1,6 @@
 # tests/website_change_detection.py
 import unittest
-from src import src
+from src import main
 
 class TestWebsiteChangeDetection(unittest.TestCase):
     def test_something(self):
