@@ -41,8 +41,8 @@ jobs:
           checkout_version=${{ steps.versions.outputs.checkout }}
           setup_python_version=${{ steps.versions.outputs.setup_python }}
 
-          sed -i "s/actions\/checkout@v[^']*/actions\/checkout@$checkout_version/" .github/workflows/code-checking.yml
-          sed -i "s/actions\/setup-python@v[^']*/actions\/setup-python@$setup_python_version/" .github/workflows/code-checking.yml
+          sed -i "s/actions\/checkout@v[^']*/actions\/checkout@$checkout_version/" .github/workflows/code-checking-workflow.yml
+          sed -i "s/actions\/setup-python@v[^']*/actions\/setup-python@$setup_python_version/" .github/workflows/code-checking-workflow.yml
 
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
