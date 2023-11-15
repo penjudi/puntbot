@@ -1,0 +1,22 @@
+name: Formatter Configuration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Format code
+        uses: actions/format@v3
+        with:
+          args: 'src/**/*.py'
