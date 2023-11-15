@@ -1,26 +1,42 @@
-# .github/workflows/ci.yml
-name: CI
+# .github/workflows/update-ci.yml
+name: Update CI
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: '0 0 * * *'  # Run every day at midnight UTC
 
 jobs:
-  test:
+  update:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.4.2  # Use a specific version for this action
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v2.3.1  # Use a specific version for this action
         with:
-          python-version: 3.12
+          python-version: 3.x
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - name: Install jq
+        run: sudo apt-get install jq
 
-      - name: Run tests
-        run: python -m unittest discover tests
+      - name: Get latest versions
+        id: versions
+        run: |
+          echo "::set-output name=checkout::$(curl -s https://api.github.com/repos/actions/checkout/releases/latest | jq -r .tag_name)"
+          echo "::set-output name=setup_python::$(curl -s https://api.github.com/repos/actions/setup-python/releases/latest | jq -r .tag_name)"
+
+      - name: Compare versions and update ci.yml
+        run: |
+          checkout_version=${{ steps.versions.outputs.checkout }}
+          setup_python_version=${{ steps.versions.outputs.setup_python }}
+          
+          sed -i "s/actions\/checkout@v[^']*/actions\/checkout@$checkout_version/" .github/workflows/ci.yml
+          sed -i "s/actions\/setup-python@v[^']*/actions\/setup-python@$setup_python_version/" .github/workflows/ci.yml
+
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .github/workflows/ci.yml
+          git commit -m "Update GitHub Actions versions"
+          git push
