@@ -49,10 +49,10 @@ jobs:
           git push
 
       - name: Run linter
-        uses: eslint/eslint@v8
+        uses: eslint/eslint@v8.53.0
 
       - name: Run code formatter
-        uses: https://github.com/actions/format@v3
+        uses: https://github.com/actions/format
         with:
           args: 'src/**/*.py'
 
