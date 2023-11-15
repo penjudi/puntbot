@@ -1,34 +1,60 @@
+# .github/workflows/code-checking-workflow.yml
 name: Code Checking Workflow
 
 on:
   push:
     branches:
-      - main  # Change to your desired branch name
+      - main
   pull_request:
     branches:
-      - main  # Change to your desired branch name
+      - main
 
 jobs:
   code-check:
-    runs-on: ubuntu-latest  # Replace <link>ubuntu-latest</link> with ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2  # Replace <link>actions/checkout@v2</link> with actions/checkout@v2
-      
-      - name: Set up Python
-        uses: actions/setup-python@v2  # Replace <link>actions/setup-python@v2</link> with actions/setup-python@v2
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js 16
+        uses: actions/setup-node@v4
         with:
-          python-version: 3.12  # Replace with your desired Python version
-      
+          node-version: '16'
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.12
+
       - name: Install dependencies
-        run: pip install -r requirements.txt  # Replace <link>pip</link> with pip and adjust the rest accordingly
-      
+        run: pip install -r requirements.txt
+
+      - name: Get latest versions
+        id: versions
+        run: |
+          echo "::set-output name=checkout::$(curl -s https://api.github.com/repos/actions/checkout/releases/latest | jq -r .tag_name)"
+          echo "::set-output name=setup_python::$(curl -s https://api.github.com/repos/actions/setup-python/releases/latest | jq -r .tag_name)"
+
+      - name: Compare versions and update workflow
+        run: |
+          checkout_version=${{ steps.versions.outputs.checkout }}
+          setup_python_version=${{ steps.versions.outputs.setup_python }}
+
+          sed -i "s/actions\/checkout@v[^']*/actions\/checkout@$checkout_version/" .github/workflows/code-checking.yml
+          sed -i "s/actions\/setup-python@v[^']*/actions\/setup-python@$setup_python_version/" .github/workflows/code-checking.yml
+
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .github/workflows/code-checking.yml
+          git commit -m "Update GitHub Actions versions"
+          git push
+
       - name: Run linter
-        run: src  # Replace <link>pylint</link> with pylint and adjust the rest accordingly
-      
+        run: src
+
       - name: Run code formatter
-        run: src  # Replace <link>black</link> with black and adjust the rest accordingly
-      
+        run: src
+
       - name: Run code analysis
-        run: python website_change_detection.py  # Replace <link>python</link> with python and adjust the rest accordingly
+        run: python website_change_detection.py
