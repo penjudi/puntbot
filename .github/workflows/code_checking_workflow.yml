@@ -1,0 +1,34 @@
+name: Code Checking Workflow
+
+on:
+  push:
+    branches:
+      - main  # Change to your desired branch name
+  pull_request:
+    branches:
+      - main  # Change to your desired branch name
+
+jobs:
+  code-check:
+    runs-on: ubuntu-latest  # Replace <link>ubuntu-latest</link> with ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2  # Replace <link>actions/checkout@v2</link> with actions/checkout@v2
+      
+      - name: Set up Python
+        uses: actions/setup-python@v2  # Replace <link>actions/setup-python@v2</link> with actions/setup-python@v2
+        with:
+          python-version: 3.12  # Replace with your desired Python version
+      
+      - name: Install dependencies
+        run: pip install -r requirements.txt  # Replace <link>pip</link> with pip and adjust the rest accordingly
+      
+      - name: Run linter
+        run: src  # Replace <link>pylint</link> with pylint and adjust the rest accordingly
+      
+      - name: Run code formatter
+        run: src  # Replace <link>black</link> with black and adjust the rest accordingly
+      
+      - name: Run code analysis
+        run: python website_change_detection.py  # Replace <link>python</link> with python and adjust the rest accordingly
