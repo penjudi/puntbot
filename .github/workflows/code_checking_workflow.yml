@@ -10,19 +10,19 @@ on:
 
 jobs:
   code-check:
-    runs-on: <link>ubuntu-latest</link>
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: <link>actions/checkout</link>@v3
+        uses: actions/checkout@v3
 
       - name: Set up Node.js 16
-        uses: <link>actions/setup-node</link>@v3
+        uses: actions/setup-node@v3
         with:
           node-version: '16'
 
       - name: Set up Python
-        uses: <link>actions/setup-python</link>@v3
+        uses: actions/setup-python@v3
         with:
           python-version: '3.12'
 
