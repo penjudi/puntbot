@@ -49,12 +49,12 @@ jobs:
           git push
 
       - name: Run linter
-        uses: eslint/eslint@v8.53.0
+        uses: eslint/eslint@v8.19.1
 
       - name: Run code formatter
-        uses: https://github.com/actions/format
+        uses: https://github.com/actions/format@v3
         with:
-          args: 'src/**/*.py'
+          args: 'src/*.py'
 
       - name: Run code analysis
         run: python website_change_detection.py
