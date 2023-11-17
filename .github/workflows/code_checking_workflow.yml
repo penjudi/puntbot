@@ -29,6 +29,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Run ESLint
+        run: npm install eslint && npx eslint src
+
       - name: Get latest versions
         id: versions
         run: |
@@ -48,11 +51,8 @@ jobs:
           git commit -m "Update GitHub Actions versions"
           git push
 
-      - name: Run linter
-        uses: eslint/eslint-action@v3
-
       - name: Run code formatter
-        uses: actions/checkout@v3 # Update the uses field with the correct action reference
+        uses: actions/checkout@v3
         with:
           repository: actions/format
           ref: v3
