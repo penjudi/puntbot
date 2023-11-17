@@ -10,58 +10,51 @@ on:
 
 jobs:
   code-check:
-    runs-on:
- 
-ubuntu-latest
+    runs-on: ubuntu-latest
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    
-steps:
+      - name: Set up Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
 
-      
--
- 
-name:
- 
-Checkout
- 
-code
-
-        
-uses:
- 
-actions/checkout@v3
-
-
-      
--
- 
-name:
- 
-Set
- 
-up
- 
-Python
-
-        
-uses:
- 
-actions/setup-python@v3
-
-        
-with:
-
-          
-python-version:
- 
-'3.12'
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.12'
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Format code
-        uses: pre-commit/action-python-format@v2.8.2
+      - name: Get latest versions
+        id: versions
+        run: |
+          echo "::set-output name=checkout::$(curl -s https://api.github.com/repos/actions/checkout/releases/latest | jq -r .tag_name)"
+          echo "::set-output name=setup_python::$(curl -s https://api.github.com/repos/actions/setup-python/releases/latest | jq -r .tag_name)"
+
+      - name: Compare versions and update workflow
+        run: |
+          checkout_version=${{ steps.versions.outputs.checkout }}
+          setup_python_version=${{ steps.versions.outputs.setup_python }}
+          sed -i "s/actions\/checkout@v[^']*/actions\/checkout@$checkout_version/" .github/workflows/code-checking-workflow.yml
+          sed -i "s/actions\/setup-python@v[^']*/actions\/setup-python@$setup_python_version/" .github/workflows/code-checking-workflow.yml
+
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .github/workflows/code-checking-workflow.yml
+          git commit -m "Update GitHub Actions versions"
+          git push
+
+      - name: Run linter
+        uses: eslint/eslint@v8.19.1
+
+      - name: Run code formatter
+        uses: https://github.com/actions/format@v3
+        with:
+          args: 'src/*.py'
 
       - name: Run code analysis
         run: python website_change_detection.py
