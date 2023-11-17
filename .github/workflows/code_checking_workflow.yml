@@ -1,8 +1,3 @@
-
-It seems like the issue is related to the TensorFlow version specified in the requirements.txt file. TensorFlow 2.8.0 might not be available or compatible with the current environment. Here's the modified code to address this issue:
-
-yaml
-Copy code
 name: Code Checking Workflow
 
 on:
@@ -60,9 +55,6 @@ jobs:
         with:
           repository: actions/format
           ref: v3
-
-      - name: Run code analysis
-        run: python website_change_detection.py
 
       - name: Run code analysis
         run: python website_change_detection.py
