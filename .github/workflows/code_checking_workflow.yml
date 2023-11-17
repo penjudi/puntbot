@@ -34,8 +34,8 @@ jobs:
       - name: Get latest versions
         id: versions
         run: |
-          echo "::set-output name=checkout::$(curl -s https://api.github.com/repos/actions/checkout/releases/latest | jq -r .tag_name)"
-          echo "::set-output name=setup_python::$(curl -s https://api.github.com/repos/actions/setup-python/releases/latest | jq -r .tag_name)"
+          echo "checkout=$(curl -s https://api.github.com/repos/actions/checkout/releases/latest | jq -r .tag_name)" >> $GITHUB_ENV
+          echo "setup_python=$(curl -s https://api.github.com/repos/actions/setup-python/releases/latest | jq -r .tag_name)" >> $GITHUB_ENV
 
       - name: Compare versions and update workflow
         run: |
