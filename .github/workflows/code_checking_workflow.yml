@@ -10,19 +10,19 @@ on:
 
 jobs:
   code-check:
-    runs-on: ubuntu-latest
+    runs-on: <link>ubuntu-latest</link>
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: <link>actions/checkout</link>@v3
 
       - name: Set up Node.js 16
-        uses: actions/setup-node@v3
+        uses: <link>actions/setup-node</link>@v3
         with:
           node-version: '16'
 
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: <link>actions/setup-python</link>@v3
         with:
           python-version: '3.12'
 
@@ -49,7 +49,7 @@ jobs:
           git push
 
       - name: Run linter
-        uses: github/eslint-action@v4
+        uses: eslint/eslint-action@v3
 
       - name: Run code formatter
         uses: actions/checkout@v3 # Update the uses field with the correct action reference
