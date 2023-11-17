@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2.3.1  # Use a specific version for this action
         with:
-          python-version: 3.x
+          python-version: 3.12
 
       - name: Install jq
         run: sudo apt-get install jq
@@ -35,7 +35,7 @@ jobs:
           sed -i "s/actions\/checkout@v[^']*/actions\/checkout@$checkout_version/" .github/workflows/ci.yml
           sed -i "s/actions\/setup-python@v[^']*/actions\/setup-python@$setup_python_version/" .github/workflows/ci.yml
 
-          git config --local user.email "action@github.com"
+          git config --local user.email "jackercrack@yahoo.com"
           git config --local user.name "GitHub Action"
           git add .github/workflows/ci.yml
           git commit -m "Update GitHub Actions versions"
